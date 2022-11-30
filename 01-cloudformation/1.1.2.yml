@@ -1,0 +1,12 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+    Parameters:
+      Description: Name of Bucket
+      Type: String
+      Default: Enter-Name-Of-Buckit-Here
+      
