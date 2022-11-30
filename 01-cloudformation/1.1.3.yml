@@ -5,10 +5,11 @@ Parameters:
   BucketName:
     Description: Name of Bucket
     Type: String
-    Default: Enter-Name-Of-Buckit-Here
+    Default: enter-name-of-bucket-here
       
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
+      BucketName: !Sub "${AWS::AccountId}-${BucketName}"
       AccessControl: PublicRead
