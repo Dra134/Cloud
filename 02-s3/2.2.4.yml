@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template
+
+Parameters:
+  BucketName:
+    Description: Name of Bucket
+    Type: String
+    Default: stelligent-u-dra134
+
+  OneTimePassword:
+    Type: String
+    Description: Password used on first login
+
+
+      
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${BucketName}"
+      AccessControl: PublicRead
+
+  DefaultUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: DefaultUser
+      LoginProfile:
+        Password:
+          Ref: OneTimePassword
+        PasswordResetRequired: true
+  
+  DefaultPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      Description: For StellU
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          
+
+  
