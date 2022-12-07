@@ -16,23 +16,26 @@ Resources:
         Password:
           Ref: OneTimePassword
         PasswordResetRequired: true
-      Policies:
-        -PolicyName: s3-access
-        PolicyDocument:
-          Version: '2012-10-17'
-          Statement:
-          Sid: All
-            Effect: Allow
-            Action:
-            - s3:GetBucketPolicy
-            - s3:GetBucketPolicyStatus
-            - s3:GetObject
-            - s3:GetObjectVersion
-            - s3:GetBucketWebsite
-            - s3:GetBucketPublicAccessBlock
-            - s3:GetBucketTagging
-            - s3:GetBucketLoggging
-            - s3:GetLifeCycleConfiguration
-            Resource:
-            - arn:aws:s3:::*
-
+  DefaultPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: DefaultPolicy
+      Description: IAM Managed Policy For Testing
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          -  Effect: Allow
+             Action:
+              - s3:GetBucketPolicy
+              - s3:GetBucketPolicyStatus
+              - s3:GetObject
+              - s3:GetObjectVersion
+              - s3:GetBucketWebsite
+              - s3:GetBucketPublicAccessBlock
+              - s3:GetBucketTagging
+              - s3:GetBucketLoggging
+              - s3:GetLifeCycleConfiguration
+              - s3:GetAccelerateConfiguration
+              - s3:GetAccessPoint
+             Resource:
+              - arn:aws:s3:::*
