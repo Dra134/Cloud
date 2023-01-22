@@ -22,11 +22,11 @@ Resources:
     Condition: PreferredRegion
     Properties:
       BucketName: !Sub "${AWS::AccountId}-${BucketName}"
-      AccessControl: PublicRead
+      AccessControl: Private
 
   S3Bucket:
     Type: AWS::S3::Bucket
     Condition: NotPreferredRegion
     Properties:
       BucketName: !Sub "${AWS::Region}-${BucketName}"
-      AccessControl: PublicRead
+      AccessControl: Private
