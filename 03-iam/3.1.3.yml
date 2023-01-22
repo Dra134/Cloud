@@ -1,0 +1,53 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Condition:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+            - sts:AssumeRole
+  MyPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Condition:
+        - Effect: Allow
+          Action:
+          - iam:List*
+          - iam:Get*
+          - iam:Describe*
+          Resource: "*"
+      Description: "Read-only access to all IAM resources - Reused Policy"
+  MyRolePolicy:
+    Type: AWS::IAM::RolePolicy
+    Properties:
+      PolicyName: "ReadOnlyAccess"
+      RoleName: !Ref MyIAMRole
+      PolicyDocument: !Ref MyPolicy
+
+  MyNewIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Condition:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+            - sts:AssumeRole
+  MyNewRolePolicy:
+    Type: AWS::IAM::RolePolicy
+    Properties:
+      PolicyName: "ReadOnlyAccess"
+      RoleName: !Ref MyNewIAMRole
+      PolicyDocument: !Ref MyPolicy
