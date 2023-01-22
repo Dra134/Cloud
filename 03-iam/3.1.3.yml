@@ -1,5 +1,5 @@
----
 AWSTemplateFormatVersion: '2010-09-09'
+
 Resources:
   MyIAMRole:
     Type: AWS::IAM::Role
