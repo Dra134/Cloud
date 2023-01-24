@@ -1,41 +1,33 @@
 AWSTemplateFormatVersion: "2010-09-09"
+
 Description: A sample template
 
-Parameters:
-  BucketName:
-    Description: Name of Bucket
-    Type: String
-    Default: stelligent-u-dra134
-
-  OneTimePassword:
-    Type: String
-    Description: Password used on first login
-
-
-      
 Resources:
-  S3Bucket:
-    Type: AWS::S3::Bucket
+  MyBucket:
+    Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Sub "${BucketName}"
-      AccessControl: PublicRead
-
-  DefaultUser:
-    Type: AWS::IAM::User
-    Properties:
-      UserName: DefaultUser
-      LoginProfile:
-        Password:
-          Ref: OneTimePassword
-        PasswordResetRequired: true
+      BucketName: my-bucket-477
   
-  DefaultPolicy:
-    Type: AWS::IAM::Policy
+  MyBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
     Properties:
-      Description: For StellU
+      Bucket: !Ref MyBucket
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          
+          StringEquals:
+            s3:x-amz-acl: 'public-read'
 
-  
+      Policy:
+        Statement:
+          StringLike:
+            s3:prefix: [private.txt]
+            s3:x-amz-acl: 'authenticated-read'
+
+  MyIAMPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: stellu477
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
