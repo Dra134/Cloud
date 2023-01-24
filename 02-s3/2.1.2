@@ -1,0 +1,13 @@
+Question: Copying to Top Level
+How would you copy the contents of the directory to the top level of your bucket?
+
+Question: Directory Copying
+aws s3 cp /path/to/local/directory s3://bucketname/ --recursive --include "*/" --exclude "*"
+
+
+Question: Object Access
+Not yet
+
+Question: Sync vs Copy
+What makes "sync" a better choice than "cp" for some S3 uploads?
+"sync" is generally considered a better choice for some S3 uploads because it has some additional features that "cp" does not have

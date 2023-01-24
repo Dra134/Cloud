@@ -1,0 +1,9 @@
+Question: Modify Permissions
+How could you use "aws s3 cp" or "aws s3 sync" command to modify the permissions on the file?
+
+You can also use --acl option with "cp" or "sync" command to specify the desired access control level for the uploaded files, like aws s3 cp /path/to/local/file s3://bucketname/file --acl public-read
+
+Question: Changing Permissions
+Is there a way you can change the permissions on the file without re-uploading it?
+
+Yes, you can use the put-object-acl command to modify the ACL of an existing object in a bucket.
