@@ -23,7 +23,7 @@ Resources:
           StringLike:
             s3:prefix: [private.txt]
             s3:x-amz-acl: 'authenticated-read'
-
+##maint login
   MyIAMPolicy:
     Type: 'AWS::IAM::Policy'
     Properties:
