@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  MyBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: my-bucket-477
+      VersioningConfiguration:
+        Status: enabled
+
+  MyBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref MyBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          IpAddress:
+            AWS:SourceIp:
+              - !Ref IpAddress
+        Statement:
+          StringEquals:
+            s3:x-amz-acl: 'public-read'
+      Policy:
+        Statement:
+          StringLike:
+            s3:prefix: [private.txt]
+            s3:x-amz-acl: 'authenticated-read'
+
+  MyIAMPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: MyIAMPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          IpAddress:
+            AWS:SourceIp:
+              - !Ref IpAddress
+        Statement:
+          StringEquals:
+            s3:x-amz-acl: 'private'
+      Policy:
+        Statement:
+          StringLike:
+            s3:prefix: [private.txt]
+            s3:x-amz-acl: 'authenticated-read'
