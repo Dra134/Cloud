@@ -24,10 +24,10 @@ Resources:
             s3:prefix: [private.txt]
             s3:x-amz-acl: 'authenticated-read'
 ##maint login
-  MyIAMPolicy:
-    Type: 'AWS::IAM::Policy'
-    Properties:
-      PolicyName: stellu477
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
+  # MyIAMPolicy:
+  #   Type: 'AWS::IAM::Policy'
+  #   Properties:
+  #     PolicyName: stellu477
+  #     PolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:

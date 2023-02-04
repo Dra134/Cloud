@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName:
+      ImageId:
+      SubnnetId: !ImportValue 
+      VpcId: !ImportValue 
+      Tags: !ImportValue 
+
+  Outputs:
+    InstanceId:
+      Value: !Ref EC2Instance
+    PrivateIp:
+      Value: !GetAtt EC2Instance.PrivateIp

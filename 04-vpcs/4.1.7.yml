@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+###### Created by Robert Webb ######
+
+###### Paramaters ######
+
+Parameters:
+  VpcCidr:
+    Description: Please enter the IP range (CIDR notation) for this VPC
+    Type: String
+    Default: '10.0.0.0/16'
+
+  AvailabilityZonePublic1:
+    Description: The availability zone for public
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: "us-east-1a"
+
+  AvailabilityZonePrivate1:
+    Description: The availability zone for private
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: "us-east-1a"
+
+###### Resources ######
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      EnableDnsHostnames: True
+      EnableDnsSupport: True
+      CidrBlock: !Ref VpcCidr
+      InstanceTenancy: default
+      Tags:
+      - Key: user
+        Value: Dra477
+      - Key: stelligent-u-lesson
+        Value: '4.1.1'
+      - Key: stelligent-u-lab
+        Value: four
+
+  SubnetPublic:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZonePublic1
+      VpcId: !Ref Vpc
+      CidrBlock: 10.0.0.0/24
+
+  SubnetPrivate:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZonePrivate1
+      VpcId: !Ref Vpc
+      CidrBlock: 10.0.1.0/24
+
+
+  ######   Internet Gateway    ######
+
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  VPCGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref Vpc
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+      RouteTableId: !Ref RouteTable
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref SubnetPublic
+
+########  Security Groups  ########
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow ssh
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: icmp
+          FromPort: 8
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+
+###### Elastic IP ######
+
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: Vpc
+
+  ElasticIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      InstanceId: !ImportValue EC2Instance
+
+###### Nat Gateway ######
+
+  NatGateway:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt ElasticIP.AllocationId
+      SubnetId: !Ref SubnetPrivate
+
+
+
+###### Outputs ######
+
+Outputs:
+
+  VpcId:
+    Description: The Vpc Id
+    Value: !Ref Vpc
+    Export:
+      Name: VpcId
+
+  SubnetId:
+    Description: The Subnet Id
+    Value: !Ref SubnetPrivate
+    Export: 
+      Name: SubnetId
+
+  ElasticIPId:
+    Description: The Elastic IP address
+    Value: !Ref ElasticIP
+    Export:
+      Name: ElasticIPId

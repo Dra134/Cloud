@@ -3,9 +3,9 @@ Resources:
   MyBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: my-bucket-477
+      BucketName: my-bucket-
       VersioningConfiguration:
-        Status: enabled
+        Status: Enabled
 
   MyBucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
@@ -14,33 +14,15 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          IpAddress:
-            AWS:SourceIp:
-              - !Ref IpAddress
-        Statement:
-          StringEquals:
-            s3:x-amz-acl: 'public-read'
-      Policy:
-        Statement:
-          StringLike:
-            s3:prefix: [private.txt]
-            s3:x-amz-acl: 'authenticated-read'
-
-  MyIAMPolicy:
-    Type: 'AWS::IAM::Policy'
+        - sid: PublicReadAccess
+          Effect: Allow
+          Principal: '*'
+          Action: 'S3:GetObject'
+          Resource: 'arn:aws:s3:::my-bucket-477/*'
+  
+  MyObject:
+    Type: 'AWS::S3::Object'
     Properties:
-      PolicyName: MyIAMPolicy
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          IpAddress:
-            AWS:SourceIp:
-              - !Ref IpAddress
-        Statement:
-          StringEquals:
-            s3:x-amz-acl: 'private'
-      Policy:
-        Statement:
-          StringLike:
-            s3:prefix: [private.txt]
-            s3:x-amz-acl: 'authenticated-read'
+      Bucket: !Ref MyBucket
+      Key: private.txt
+      S3AccessControl: AuthenticatedRead
