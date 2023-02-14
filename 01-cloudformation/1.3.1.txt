@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Define the default friendly name for the S3 bucket
+friendly_name="my-s3-bucket"
+
+# Path to the CloudFormation template
+TEMPLATE_FILE="./s3-bucket-template.yaml"
+
+# Read the target deployment regions from a configuration file
+regions=$(cat config.json | jq -r '.regions[]')
+
+# Loop through the regions to deploy the S3 bucket in each region
+for region in $regions; do
+  # Set the unique bucket name based on the current region and friendly name
+  bucket_name="current-$region-$friendly_name"
+
+  # Deploy the CloudFormation stack in the current region
+  aws cloudformation create-stack \
+    --stack-name "s3-bucket-$region" \
+    --template-body "file://$TEMPLATE_FILE" \
+    --parameters ParameterKey=BucketName,ParameterValue=$bucket_name \
+    --region $region
+done

@@ -1,15 +1,19 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: A sample template
 
+### Parameters ###
+
 Parameters:
   BucketName:
     Description: Name of Bucket
     Type: String
     Default: enter-name-of-bucket-here
       
+### Resources ###
+
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "${AWS::AccountId}-${BucketName}"
-      AccessControl: PublicRead
+      AccessControl: Private

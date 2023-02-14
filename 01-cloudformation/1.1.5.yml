@@ -26,6 +26,7 @@ Resources:
   S3BucketPreferred:
     Type: AWS::S3::Bucket
     Condition: PreferredRegion
+    DeletionPolicy: Retain
     Properties:
       BucketName: !Sub "${AWS::AccountId}-${BucketName}"
       AccessControl: Private

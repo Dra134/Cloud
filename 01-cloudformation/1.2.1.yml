@@ -1,41 +1,49 @@
-AWSTemplateFomatVersion: 2010-09-09
+AWSTemplateFormatVersion: "2010-09-09"
+Description: A sample template by Robert Webb
 
+### Parameters ###
 
-Paramaters:
-  OneTimePassword:
+Parameters:
+  UserName:
     Type: String
-    Description: Password used on first login
+    Description: The name for the IAM User
+
+### Resources ###
 
 Resources:
-
-  DefaultUser:
-    Type: AWS::IAM::User
-    Properties:
-      UserName: DefaultUser
-      LoginProfile:
-        Password:
-          Ref: OneTimePassword
-        PasswordResetRequired: true
-  DefaultPolicy:
+  S3ReadOnlyPolicy:
     Type: AWS::IAM::ManagedPolicy
     Properties:
-      ManagedPolicyName: DefaultPolicy
-      Description: IAM Managed Policy For Testing
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          -  Effect: Allow
-             Action:
-              - s3:GetBucketPolicy
-              - s3:GetBucketPolicyStatus
+          - Effect: Allow
+            Action:
+              - s3:ListAllMyBuckets
+              - s3:GetBucketLocation
+            Resource: "arn:aws:s3:::*"
+          - Effect: Allow
+            Action:
               - s3:GetObject
-              - s3:GetObjectVersion
-              - s3:GetBucketWebsite
-              - s3:GetBucketPublicAccessBlock
-              - s3:GetBucketTagging
-              - s3:GetBucketLoggging
-              - s3:GetLifeCycleConfiguration
-              - s3:GetAccelerateConfiguration
-              - s3:GetAccessPoint
-             Resource:
-              - arn:aws:s3:::*
+            Resource: "arn:aws:s3:::*/*"
+      Description: Allows read access to all S3 Buckets
+      ManagedPolicyName: S3ReadOnlyPolicy
+
+  IAMUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref UserName
+
+  IAMPolicyAttachment:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyArn: !Ref S3ReadOnlyPolicy
+      Users:
+        - !Ref UserName
+
+### Outputs ###
+
+Outputs:
+  UserName:
+    Description: The name of the IAM User
+    Value: !Ref UserName
