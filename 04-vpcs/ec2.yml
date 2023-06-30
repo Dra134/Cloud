@@ -7,8 +7,8 @@ Resources:
       InstanceType: t2.micro
       KeyName:
       ImageId:
-      SubnnetId: !ImportValue 
-      VpcId: !ImportValue 
+      SubnetId: !ImportValue SubnetId
+      VpcId: !ImportValue VpcId
       Tags: !ImportValue 
 
   Outputs:
